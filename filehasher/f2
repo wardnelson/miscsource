@@ -1,0 +1,26 @@
+import hashlib
+import sys
+import argparse
+
+parser = argparse.ArgumentParser(description='Calculate a Hash of the file passed in')
+parser.add_argument("file", help='file to calulate a hash of')
+args = parser.parse_args()
+print(args.file)
+
+
+## parse command line
+#if file_name_given:
+#    inf = open(file_name_given)
+#else:
+#    inf = sys.stdin.buffer.raw
+
+hasher = hashlib.md5()
+inf = open(args.file, 'rb')
+buf = inf.read()
+hasher.update(buf)
+print(hasher.hexdigest())
+
+
+if inf is not sys.stdin:
+    inf.close()
+
