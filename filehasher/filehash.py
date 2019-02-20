@@ -24,6 +24,7 @@ if 1:
         hasher.update(buf)
         buf = inf.read(BLOCKSIZE)
 else: 
+    # this is test code that reads the entire file in to buf...
     buf = inf.read()
     hasher.update(buf)
 
