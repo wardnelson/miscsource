@@ -20,6 +20,7 @@ def GetHashOfFile(filename):
  
 # Set the directory you want to start from
 rootDir = '.'
+rootDir = 'c:/temp'
 count = 0
 toolbar_width = 100
 
@@ -27,27 +28,38 @@ sys.stderr.write("[%s]" % (" " * toolbar_width))
 sys.stderr.flush()
 sys.stderr.write("\b" * (toolbar_width+1)) # return to start of line, after '['
 
+outstring = ''
+fillchar = '-'
+
 for dirName, subdirList, fileList in os.walk(rootDir):
 
     for fileBaseName in fileList:
         fileNameNoExt, fileExtension = os.path.splitext(fileBaseName)
-        fullPathName = '%s\\%s' % (dirName, fileBaseName)
+        fullPathName = os.path.join(dirName, fileBaseName)
         fileStatInfo = os.stat(fullPathName)
 
         hashString = GetHashOfFile(fullPathName)
 
-        sys.stderr.write("-")
+        sys.stderr.write(fillchar)
         sys.stderr.flush()
         
+        outstring += '"{}","{}","{}","{}","{}",{},{}\n'.format(fullPathName, dirName, fileBaseName, fileNameNoExt, fileExtension, fileStatInfo.st_size, hashString)
 
-        print('"%s","%s","%s","%s","%s",%d,%s' % (fullPathName, dirName, fileBaseName, fileNameNoExt, fileExtension, fileStatInfo.st_size, hashString))
         count = count + 1
 
         if (count % 100 == 0):
-            sys.stderr.write("[%s]" % (" " * toolbar_width))
+            if (fillchar == '-'):
+                fillchar = ' '
+            else :
+                fillchar = '-'
+            sys.stderr.write("\b" * (toolbar_width)) # return to start of line, after '['
             sys.stderr.flush()
-            sys.stderr.write("\b" * (toolbar_width+1)) # return to start of line, after '['
-            print("count = ", count, file=sys.stderr)
+            #sys.stderr.write("[%s]" % ("-" * toolbar_width))
+            #print("count = ", count, file=sys.stderr)
+sys.stderr.write("\n")
+sys.stderr.flush()
     
+
+print(outstring)
 
 
